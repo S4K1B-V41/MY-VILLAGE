@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shankarpasha — Village</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --accent:#0f6fff;
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#eef3ff 0%,var(--bg) 100%);
+      color:#0f1724;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+
+    /* Header */
+    header{
+      padding:24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .logo{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo .mark{
+      width:56px;height:56px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),#2dd4bf);
+      display:flex;align-items:center;justify-content:center;
+      color:white;font-weight:700;font-size:18px;
+      box-shadow:0 6px 18px rgba(15,111,255,0.18);
+    }
+    .logo h1{margin:0;font-size:18px}
+    nav{display:flex;gap:12px;align-items:center}
+    nav a{
+      color:var(--muted);text-decoration:none;font-weight:600;
+      padding:8px 12px;border-radius:8px;
+    }
+    nav a.cta{
+      background:linear-gradient(90deg,var(--accent),#2dd4bf);color:white;
+      box-shadow:0 8px 20px rgba(15,111,255,0.12);
+    }
+
+    /* Hero */
+    .hero{
+      max-width:1200px;margin:0 auto;padding:28px;
+      display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:center;
+    }
+    .hero .welcome{
+      background:var(--card);padding:28px;border-radius:14px;
+      box-shadow:0 8px 30px rgba(16,24,40,0.06);
+    }
+    .welcome h2{margin:0 0 8px;font-size:28px;letter-spacing:0.2px}
+    .welcome p{margin:0;color:var(--muted)}
+    .village-stats{
+      margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;
+    }
+    .stat{
+      background:linear-gradient(180deg,rgba(15,111,255,0.06),rgba(45,212,191,0.02));
+      padding:12px 16px;border-radius:12px;font-weight:600;color:var(--accent);
+      display:flex;flex-direction:column;
+    }
+    .stat small{font-weight:400;color:var(--muted);font-size:12px;}
+
+    /* Right card */
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,0.8),var(--glass));
+      padding:20px;border-radius:14px;backdrop-filter:blur(6px);
+      box-shadow:0 6px 20px rgba(2,6,23,0.04);
+    }
+    .card h3{margin:0 0 8px}
+    .search{
+      display:flex;gap:8px;align-items:center;
+    }
+    .search input{
+      width:100%;padding:10px 12px;border-radius:10px;border:1px solid #e6eefb;background:white;
+    }
+    .filters{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 10px;background:#fff;border-radius:999px;border:1px solid #f0f4ff;color:var(--muted);font-weight:600;font-size:13px}
+
+    /* Grid */
+    .container{max-width:1200px;margin:24px auto;padding:0 20px}
+    .grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;
+    }
+    .person{
+      background:var(--card);padding:14px;border-radius:12px;display:flex;gap:12px;align-items:flex-start;
+      box-shadow:0 6px 20px rgba(12,18,31,0.04);cursor:pointer;transition:transform .14s, box-shadow .14s;
+    }
+    .person:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(12,18,31,0.08)}
+    .avatar{width:64px;height:64px;border-radius:12px;flex-shrink:0;overflow:hidden}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta{flex:1}
+    .meta h4{margin:0 0 6px;font-size:15px}
+    .meta p{margin:0;color:var(--muted);font-size:13px}
+    .meta .phone{margin-top:8px;font-weight:700;color:var(--accent);font-size:13px}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
+    .modal{background:white;border-radius:12px;max-width:760px;width:100%;box-shadow:0 30px 80px rgba(2,6,23,0.5);display:flex;gap:20px;overflow:hidden}
+    .modal .left{flex:0 0 320px;background:#f8fbff;padding:18px;display:flex;flex-direction:column;align-items:center;gap:12px}
+    .modal .left img{width:260px;height:260px;object-fit:cover;border-radius:10px}
+    .modal .right{padding:20px;flex:1}
+    .modal h3{margin:0 0 8px}
+    .modal p{color:var(--muted)}
+    .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn{padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+    .btn.call{background:linear-gradient(90deg,#0f6fff,#2dd4bf);color:white}
+    .btn.social{background:#eef6ff;border:1px solid #e6f0ff;color:var(--accent)}
+
+    /* footer */
+    footer{padding:24px;text-align:center;color:var(--muted);font-size:14px}
+
+    /* responsive */
+    @media (max-width:880px){
+      .hero{grid-template-columns:1fr;gap:12px}
+      .modal{flex-direction:column}
+      .modal .left{flex:unset;width:100%}
+      .modal .left img{width:100%;height:260px}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="mark">SP</div>
+    <div>
+      <h1>Shankarpasha</h1>
+      <div style="color:var(--muted);font-size:13px">আমার গ্রাম — Shankarpasha</div>
+    </div>
+  </div>
+  <nav>
+    <a href="#about">বিস্তারিত</a>
+    <a href="#people">মানুষ</a>
+    <a class="cta" href="#welcome">WELCOME</a>
+  </nav>
+</header>
+
+<section class="hero" id="welcome">
+  <div class="welcome">
+    <h2>WELCOME TO SHANKARPASHA</h2>
+    <p>শংকরপাশা — আমাদের সুন্দর গ্রাম। এখানে গ্রামের ইতিহাস, মানুষ এবং তাদের জীবনকথা দেখুন। নিচে গ্রামের কিছু তথ্য ও ৫০ জনের বিস্তারিত তালিকা থাকবে।</p>
+
+    <div class="village-stats" style="margin-top:18px">
+      <div class="stat">
+        <div style="font-size:18px">Shankarpasha</div>
+        <small>গ্রাম নাম</small>
+      </div>
+      <div class="stat">
+        <div style="font-size:18px">50+</div>
+        <small>মানুষের তালিকা</small>
+      </div>
+      <div class="stat">
+        <div style="font-size:18px">বাংলাদেশ</div>
+        <small>অবস্থান</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>খুঁজুন অথবা filter করুন</h3>
+    <div class="search" style="margin-top:10px">
+      <input id="searchInp" placeholder="নাম বা বিবরণ লিখে সার্চ করুন...">
+      <button id="clearBtn" class="chip" style="border:0">রিসেট</button>
+    </div>
+    <div class="filters">
+      <div class="chip">কৃষক</div>
+      <div class="chip">মাষ্টার</div>
+      <div class="chip">ব্যবসায়ী</div>
+    </div>
+  </div>
+</section>
+
+<main class="container" id="people">
+  <h3 style="margin:0 0 12px">শংকরপাশা — গ্রামের মানুষ (৫০ জন)</h3>
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- modal -->
+<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="left">
+      <img id="modalImg" src="" alt="person">
+      <div style="font-weight:700" id="modalName">Name</div>
+      <div style="color:var(--muted)" id="modalRole">Role / Relation</div>
+    </div>
+    <div class="right">
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalDesc">Full description...</p>
+
+      <div style="margin-top:12px">
+        <div style="font-size:13px;color:var(--muted)">ফোন</div>
+        <div style="margin-top:6px">
+          <a id="modalPhone" href="#" class="btn call">Call</a>
+        </div>
+      </div>
+
+      <div class="actions" id="modalSocials" style="margin-top:14px">
+        <!-- social buttons injected -->
+      </div>
+
+      <div style="margin-top:16px">
+        <button id="closeModal" class="btn" style="background:#fff;border:1px solid #eee">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © <span id="year"></span> Shankarpasha. তৈরি করেছেন — তোমার নাম এখানে।
+</footer>
+
+<script>
+  // --- Sample data generation for 50 people ---
+  // আপনি চাইলে এখানে প্রত্যেক ব্যক্তির তথ্য সম্পূর্ণ পরিবর্তন করে দিতে পারেন।
+  const people = [
+    {
+    id: 1,
+    name: "MD SAKIB SIKDER",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/SAKIB.jpg",
+    phone: "+8801879806442",
+    desc: "MD SAKIB SIKDER IS A GREATEST PROGRAMMER. AND THE CODE IS WRITTEN BY MR SAKIB।",
+    social: {
+      facebook: "https://www.facebook.com/S4K1B.01",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 2,
+    name: "SHIMU KHANAM",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/shimu.jpg",
+    phone: "",
+    desc: "SHIMU IS A BRILLIANT STUDENT.SHE GOT GPA5.0 IN SSC AND HSC BOTH.NOW SHE STUDYING AT GOPALGANJ GOVT COLLEGE.",
+    social: {
+      facebook: "https://www.facebook.com/shi.mu.59812",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 3,
+    name: "MD MASUM SIKDER",
+    role: "NOTHING",
+    photo: "C:/Users/S/Desktop/New folder/masum.jpg",
+    phone: "+8801614769487",
+    desc: "HE IS AN HARD WORKER.",
+    social: {
+      facebook: "https://www.facebook.com/masum.shikder.79230",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 4,
+    name: "MD ISMAIL SIKDER",
+    role: "ENGINEER",
+    photo: "C:/Users/S/Desktop/New folder/ismail.jpg",
+    phone: "+8801407422212",
+    desc: "MD ISMAIL SIKDER IS AN DIPLONA ENGINEER ON ELECTRICAL TRADE.AND HE IS TO MUCH HONEST.",
+    social: {
+      facebook: "https://www.facebook.com/hmsismailhossen.shikder",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 5,
+    name: "MD MAHABUBUR SIKDER",
+    role: "BUSINESSMAN",
+    photo: "C:/Users/S/Desktop/New folder/mahabur.jpg",
+    phone: "+8801921272310",
+    desc: "MD MAHABUBUR SIKDER IS A FAMOUS BUSINESSMAN IN KASHIANI UPZILA.HE WAS A HONESTR BUSINESSMAN .NOW HE IS AN FOREIGNER",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://www.facebook.com/profile.php?id=61576334945889"
+    }
+  },
+  {
+    id: 6,
+    name: "SM ABU BAKKAR",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/abu bakkar.jpg",
+    phone: "",
+    desc: "HE IS A STUDENT .HE IS ONLY 8.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 7,
+    name: "SADIA ISLAM",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/sadia.jpg",
+    phone: "",
+    desc: "SHE IS A STUDENT.SHE READ IN CLASS PLAY.SHE IS ONLY 4",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 8,
+    name: "MST LOTIPA BEGUM",
+    role: "HOUSEWIFE",
+    photo: "C:/Users/S/Desktop/New folder/lotipa.jpg",
+    phone: "+8801714158257",
+    desc: "SHE IS AN HOUSEWIFE.HUSBAND NAME MAHABUB SIKDER",
+    social: {
+      facebook: "https://www.facebook.com/mahabur.shikder.596424",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 9,
+    name: "AMENA BEGUM",
+    role: "HOUSEWIFE",
+    photo: "C:/Users/S/Desktop/New folder/amena.jpg",
+    phone: "+8801318433325",
+    desc: "SHE IS AN HOUSEWIFE.HUSBAND NAME IS MORTAJ SIKDER.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 10,
+    name: "MD MUTALEB SHEIKH",
+    role: "FARMER",
+    photo: "C:/Users/S/Desktop/New folder/mutaleb.jpg",
+    phone: "",
+    desc: "MUTALEB SHEIKH IS AN FARMER.HE HAVE 2 COWS.HE IS AN HONEST MAN",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 11,
+    name: "MD BOKUL SHEIKH",
+    role: "BUSINESSMAN",
+    photo: "C:/Users/S/Desktop/New folder/bokul.jpg",
+    phone: "",
+    desc: "BOKUL SHEIKH IS AN FAMOUS BUSINESSMAN IN DHAKA.HE IS A GOOD PERSON",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 12,
+    name: "MD DAUD SHEIKH",
+    role: "JOB",
+    photo: "C:/Users/S/Desktop/New folder/daud.jpg",
+    phone: "",
+    desc: "DAUD SHEIKH IS AN GARMENTS WORKER.HE IS A GOOD MAN AS LIKE HIS FATHER",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 13,
+    name: "MD PALASH SHEIKH",
+    role: "BUSINESSMAN",
+    photo: "C:/Users/S/Desktop/New folder/polash.jpg",
+    phone: "",
+    desc: "PALASH SHEIKH IS A GOOD MAN.HE HAVE A SHOP IN DHAKA.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 14,
+    name: "MD ASHRAF KAZI",
+    role: "DRIVER",
+    photo: "C:/Users/S/Desktop/New folder/ashraf.jpg",
+    phone: "",
+    desc: "ASHRAF KAZI IS AN PICKUP DRIVER.HE HAS A GOOD REPOTION ON DRIVING LIFE.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 15,
+    name: "MD MANIK KAZI",
+    role: "STUDEND AND JOB",
+    photo: "C:/Users/S/Desktop/New folder/manik.jpg",
+    phone: "",
+    desc: "MB MANIK KAZI IS AN STUDENT AND CONSTRACTION EMPLOYEE. HE IS A GOOD STUDENT.",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 16,
+    name: "MD HAFIZUR SHIKDER",
+    role: "ELECTRITIAN",
+    photo: "C:/Users/S/Desktop/New folder/hafizur.jpg",
+    phone: "",
+    desc: "(BANGLISH) SE AKJON COMOTKAR ELECTRITIAN. SE AII KAJ A ASE PRAY 20 BOSOR.TAR JONNO SUVOKAMONA.",
+    social: {
+      facebook: "https://www.facebook.com/mdhafizur.shikder",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 17,
+    name: "MD SUBHAN SHIKDER",
+    role: "POLITICIAN",
+    photo: "C:/Users/S/Desktop/New folder/subhan.jpg",
+    phone: "+880 1923-609779",
+    desc: "SUBHAN SHIKER AKJON POLITICIAN.SE AWAMI LEAGUE ER SUPPORTER.TAR CARITRIK GUNABALI VALO.TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "https://www.facebook.com/profile.php?id=61582634883958",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 18,
+    name: "MD SHIPLU SHIKDER",
+    role: "ANSAR",
+    photo: "C:/Users/S/Desktop/New folder/shiplu.jpg",
+    phone: "+880 1780-099834",
+    desc: "MD SHIPLU SHIKDER AKJON TRAINING PRAPTO ANSAR BAHINIR SODOSSO.SE ONEEK DHORONER KAJ APARODORSHI.TAR HOBBY HOLO MAAS DHORA.",
+    social: {
+      facebook: "https://www.facebook.com/shikder.shiblu",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 19,
+    name: "MD MUJAHID SHIKDER",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/mujahid.jpg",
+    phone: "",
+    desc: "MD MUJAHID SHIKDER AKJON STUDENT .SE MATRO PLAY CLASS A PORE.TAR BOYOSH 6 BOSOR.BABAR AKMATRO CELE SE.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 20,
+    name: "MD AJGAR SHIKDER",
+    role: "FARMER",
+    photo: "C:/Users/S/Desktop/New folder/ajgar.jpg",
+    phone: "",
+    desc: "MD AJGAR SHIKDER AKJON FARMER.TAR NIJOSSHO KICO JOMI ASE AR ONNO DER KICO JOMI SE CASH KORE.TAR BOYOSH 50+.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 21,
+    name: "MST RASHIDA BEGUM",
+    role: "HOUSEWIFE",
+    photo: "C:/Users/S/Desktop/New folder/rashida.jpg",
+    phone: "",
+    desc: "MST RASHIDA BEGUM AKJON HOUSEWIFE.TAR MAJHARI AKTA FAMILY ASE.SE STRUGGLE PRIYO MANUSH.TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 22,
+    name: "MD SHOHAG SHIKDRE",
+    role: "কৃষক",
+    photo: "C:/Users/S/Desktop/New folder/sohag.jpg",
+    phone: "+880 1863-570858",
+    desc: "মোঃ আব্দুল করিম শংকরপাশা গ্রামের একজন পরিশ্রমী কৃষক। তিনি ধান ও সবজি চাষে দক্ষ।",
+    social: {
+      facebook: "https://www.facebook.com/shikder.sohag.548233",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 23,
+    name: "MD HASIB SHIKDER",
+    role: "CAKRIJIBI",
+    photo: "C:/Users/S/Desktop/New folder/hasib.jpg",
+    phone: "+880 1604-204743",
+    desc: "MD HASIB SHIKDER AKJON JAHAJ ER CAKRIJIBI.SE KHUB E KORMOTH.MANUSH HISABE VALO.TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "https://www.facebook.com/mdhasib.shikder.524",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 24,
+    name: "RUPA AKTER",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/rupa.jpg",
+    phone: "",
+    desc: "RUPA AKTER AKJON BRILLIANT STUDENT .SE BORTOMANE CLASS 10 A PORE.SE SSC26 ER BATCH ER STUDENT.TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 25,
+    name: "MD BASHAR FOKIR",
+    role: "BUSINESSMAN",
+    photo: "C:/Users/S/Desktop/New folder/bashar.jpg",
+    phone: "",
+    desc: "MD NASHAR FOKIR AKJON VALO BUSINESSMAN. SE ONEEK DHORONER BUSINESS KORE THAKE. SE DHAKA TE THAKE. TAR SUNDOR AKTA FAMILY ASE.",
+    social: {
+      facebook: "https://www.facebook.com/abul.bashar.226236",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 26,
+    name: "GN AUVI",
+    role: "SAINIK OF SENA BAHINI",
+    photo: "C:/Users/S/Desktop/New folder/auvi.jpg",
+    phone: "+8801958317989",
+    desc: "GN AUVI SE AKJON GORBITO SAINIK OF BANGLADESH ARMY. RIGHT NOW TAR CAKRI BOYOS 7 YEARS. TAR UGGOL VOBISSSOT KAMONA KORI",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 27,
+    name: "EMTIAZ AHMED ANIK",
+    role: "WORKS AT NEWS 24",
+    photo: "C:/Users/S/Desktop/New folder/anik.jpg",
+    phone: "+8801888180885",
+    desc: "EMTIAZ AHMED ANIK SE AKJON SUKHI AR MOJAR MANUS . BORTOMANE SE NEWS 24 A JOB KORE. TAR LIFE A BORO AKTA ACCIDENT ASE. BUT SE AKHON PROPERLY SUSTO. TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 28,
+    name: "MST MONIRA BEGUM",
+    role: "HOUSEWIFE",
+    photo: "C:/Users/S/Desktop/New folder/monira.jpg",
+    phone: "",
+    desc: "MST MONIRA BEGUM AKJON HOUSEWIFE. SE TAR FAMILY DEKHA SUNA KORE. TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 29,
+    name: "ARIN FOKIR",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/orin.jpg",
+    phone: "+8801941188700",
+    desc: "ARIN FOKIR AKJON STUDENT. SE MANUS HISABE HONEST.PORA LEKHAR PASAPASI SE HAAT ER KAJ O KORTE PARODORSHI.TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 30,
+    name: "ALIF FOKIR",
+    role: "STUDENT",
+    photo: "C:/Users/S/Desktop/New folder/alif.jpg",
+    phone: "",
+    desc: "ALIF FOKIR AKJON STUDENT. SE CLASS 3 ER STUDENT. TAR UJJOL VOBISSOT KAMONA KORI.",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+
+  /*  🔴 id 30 এর পর থেকে OFF শুরু
+
+  {
+    id: 31,
+    name: "",
+    role: "কৃষক",
+    photo: "C:/Users/S/Desktop/New folder/.jpg",
+    phone: "+8801712345678",
+    desc: "মোঃ আব্দুল করিম শংকরপাশা গ্রামের একজন পরিশ্রমী কৃষক। তিনি ধান ও সবজি চাষে দক্ষ।",
+    social: {
+      facebook: "https://facebook.com/abdul.karim",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 32,
+    name: "রহিম উদ্দিন",
+    role: "শিক্ষক",
+    photo: "uploads/rahim.jpg",
+    phone: "+8801912345678",
+    desc: "রহিম উদ্দিন স্থানীয় স্কুলের শিক্ষক। তিনি শিশুদের শিক্ষার প্রতি অত্যন্ত আগ্রহী।",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://linkedin.com/in/rahimuddin"
+    }
+  },
+  {
+    id: 33,
+    name: "জামাল হোসেন",
+    role: "ব্যবসায়ী",
+    photo: "uploads/jamal.jpg",
+    phone: "+8801812345678",
+    desc: "জামাল হোসেন গ্রামের একজন সফল ব্যবসায়ী। তিনি নিত্যপ্রয়োজনীয় পণ্যের দোকান চালান।",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 34,
+    name: "মোঃ আব্দুল করিম",
+    role: "কৃষক",
+    photo: "uploads/karim.jpg",
+    phone: "+8801712345678",
+    desc: "মোঃ আব্দুল করিম শংকরপাশা গ্রামের একজন পরিশ্রমী কৃষক। তিনি ধান ও সবজি চাষে দক্ষ।",
+    social: {
+      facebook: "https://facebook.com/abdul.karim",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 35,
+    name: "রহিম উদ্দিন",
+    role: "শিক্ষক",
+    photo: "uploads/rahim.jpg",
+    phone: "+8801912345678",
+    desc: "রহিম উদ্দিন স্থানীয় স্কুলের শিক্ষক। তিনি শিশুদের শিক্ষার প্রতি অত্যন্ত আগ্রহী।",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://linkedin.com/in/rahimuddin"
+    }
+  },
+  {
+    id: 36,
+    name: "জামাল হোসেন",
+    role: "ব্যবসায়ী",
+    photo: "uploads/jamal.jpg",
+    phone: "+8801812345678",
+    desc: "জামাল হোসেন গ্রামের একজন সফল ব্যবসায়ী। তিনি নিত্যপ্রয়োজনীয় পণ্যের দোকান চালান।",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 37,
+    name: "মোঃ আব্দুল করিম",
+    role: "কৃষক",
+    photo: "uploads/karim.jpg",
+    phone: "+8801712345678",
+    desc: "মোঃ আব্দুল করিম শংকরপাশা গ্রামের একজন পরিশ্রমী কৃষক। তিনি ধান ও সবজি চাষে দক্ষ।",
+    social: {
+      facebook: "https://facebook.com/abdul.karim",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 38,
+    name: "রহিম উদ্দিন",
+    role: "শিক্ষক",
+    photo: "uploads/rahim.jpg",
+    phone: "+8801912345678",
+    desc: "রহিম উদ্দিন স্থানীয় স্কুলের শিক্ষক। তিনি শিশুদের শিক্ষার প্রতি অত্যন্ত আগ্রহী।",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://linkedin.com/in/rahimuddin"
+    }
+  },
+  {
+    id: 39,
+    name: "জামাল হোসেন",
+    role: "ব্যবসায়ী",
+    photo: "uploads/jamal.jpg",
+    phone: "+8801812345678",
+    desc: "জামাল হোসেন গ্রামের একজন সফল ব্যবসায়ী। তিনি নিত্যপ্রয়োজনীয় পণ্যের দোকান চালান।",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 40,
+    name: "মোঃ আব্দুল করিম",
+    role: "কৃষক",
+    photo: "uploads/karim.jpg",
+    phone: "+8801712345678",
+    desc: "মোঃ আব্দুল করিম শংকরপাশা গ্রামের একজন পরিশ্রমী কৃষক। তিনি ধান ও সবজি চাষে দক্ষ।",
+    social: {
+      facebook: "https://facebook.com/abdul.karim",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 41,
+    name: "রহিম উদ্দিন",
+    role: "শিক্ষক",
+    photo: "uploads/rahim.jpg",
+    phone: "+8801912345678",
+    desc: "রহিম উদ্দিন স্থানীয় স্কুলের শিক্ষক। তিনি শিশুদের শিক্ষার প্রতি অত্যন্ত আগ্রহী।",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://linkedin.com/in/rahimuddin"
+    }
+  },
+  {
+    id: 42,
+    name: "জামাল হোসেন",
+    role: "ব্যবসায়ী",
+    photo: "uploads/jamal.jpg",
+    phone: "+8801812345678",
+    desc: "জামাল হোসেন গ্রামের একজন সফল ব্যবসায়ী। তিনি নিত্যপ্রয়োজনীয় পণ্যের দোকান চালান।",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 43,
+    name: "মোঃ আব্দুল করিম",
+    role: "কৃষক",
+    photo: "uploads/karim.jpg",
+    phone: "+8801712345678",
+    desc: "মোঃ আব্দুল করিম শংকরপাশা গ্রামের একজন পরিশ্রমী কৃষক। তিনি ধান ও সবজি চাষে দক্ষ।",
+    social: {
+      facebook: "https://facebook.com/abdul.karim",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 44,
+    name: "রহিম উদ্দিন",
+    role: "শিক্ষক",
+    photo: "uploads/rahim.jpg",
+    phone: "+8801912345678",
+    desc: "রহিম উদ্দিন স্থানীয় স্কুলের শিক্ষক। তিনি শিশুদের শিক্ষার প্রতি অত্যন্ত আগ্রহী।",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://linkedin.com/in/rahimuddin"
+    }
+  },
+  {
+    id: 45,
+    name: "জামাল হোসেন",
+    role: "ব্যবসায়ী",
+    photo: "uploads/jamal.jpg",
+    phone: "+8801812345678",
+    desc: "জামাল হোসেন গ্রামের একজন সফল ব্যবসায়ী। তিনি নিত্যপ্রয়োজনীয় পণ্যের দোকান চালান।",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 46,
+    name: "মোঃ আব্দুল করিম",
+    role: "কৃষক",
+    photo: "uploads/karim.jpg",
+    phone: "+8801712345678",
+    desc: "মোঃ আব্দুল করিম শংকরপাশা গ্রামের একজন পরিশ্রমী কৃষক। তিনি ধান ও সবজি চাষে দক্ষ।",
+    social: {
+      facebook: "https://facebook.com/abdul.karim",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 47,
+    name: "রহিম উদ্দিন",
+    role: "শিক্ষক",
+    photo: "uploads/rahim.jpg",
+    phone: "+8801912345678",
+    desc: "রহিম উদ্দিন স্থানীয় স্কুলের শিক্ষক। তিনি শিশুদের শিক্ষার প্রতি অত্যন্ত আগ্রহী।",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://linkedin.com/in/rahimuddin"
+    }
+  },
+  {
+    id: 48,
+    name: "জামাল হোসেন",
+    role: "ব্যবসায়ী",
+    photo: "uploads/jamal.jpg",
+    phone: "+8801812345678",
+    desc: "জামাল হোসেন গ্রামের একজন সফল ব্যবসায়ী। তিনি নিত্যপ্রয়োজনীয় পণ্যের দোকান চালান।",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  },
+  {
+    id: 49,
+    name: "রহিম উদ্দিন",
+    role: "শিক্ষক",
+    photo: "uploads/rahim.jpg",
+    phone: "+8801912345678",
+    desc: "রহিম উদ্দিন স্থানীয় স্কুলের শিক্ষক। তিনি শিশুদের শিক্ষার প্রতি অত্যন্ত আগ্রহী।",
+    social: {
+      facebook: "",
+      twitter: "",
+      linkedin: "https://linkedin.com/in/rahimuddin"
+    }
+  },
+
+
+
+  {
+    id: 50,
+    name: "জামাল হোসেন",
+    role: "ব্যবসায়ী",
+    photo: "uploads/jamal.jpg",
+    phone: "+8801812345678",
+    desc: "জামাল হোসেন গ্রামের একজন সফল ব্যবসায়ী। তিনি নিত্যপ্রয়োজনীয় পণ্যের দোকান চালান।",
+    social: {
+      facebook: "https://facebook.com/jamal.hossain",
+      twitter: "",
+      linkedin: ""
+    }
+  }
+
+  🔴 OFF শেষ */
+
+];
+  
+
+  // Fill grid
+  const grid = document.getElementById('grid');
+  function renderList(list){
+    grid.innerHTML = '';
+    if (list.length === 0){
+      grid.innerHTML = '<div style="padding:32px;background:#fff;border-radius:12px;color:var(--muted);grid-column:1/-1;text-align:center">কোনো ফলাফল মেলেনি</div>';
+      return;
+    }
+    list.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'person';
+      el.setAttribute('data-id', p.id);
+      el.innerHTML = `
+        <div class="avatar"><img src="${p.photo}" alt="${p.name}"></div>
+        <div class="meta">
+          <h4>${p.name}</h4>
+          <p>${p.role}</p>
+          <div class="phone">${p.phone}</div>
+        </div>
+      `;
+      el.addEventListener('click', ()=> openModal(p));
+      grid.appendChild(el);
+    });
+  }
+
+  // Modal functions
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalImg = document.getElementById('modalImg');
+  const modalName = document.getElementById('modalName');
+  const modalRole = document.getElementById('modalRole');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalPhone = document.getElementById('modalPhone');
+  const modalSocials = document.getElementById('modalSocials');
+  const closeModalBtn = document.getElementById('closeModal');
+
+  function openModal(person){
+    modalImg.src = person.photo;
+    modalName.textContent = person.name;
+    modalRole.textContent = person.role;
+    modalTitle.textContent = person.name + ' — বিস্তারিত';
+    modalDesc.textContent = person.desc;
+    modalPhone.href = `tel:${person.phone.replace(/[^0-9+]/g,'')}`;
+    modalPhone.textContent = 'ফোন: ' + person.phone;
+
+    // socials
+    modalSocials.innerHTML = '';
+    const socials = person.social || {};
+    const icons = {
+      facebook: '🔵 Facebook',
+      twitter: '🐦 Twitter',
+      linkedin: '🔗 LinkedIn'
+    };
+    Object.keys(socials).forEach(key => {
+      const url = socials[key];
+      if (url && url.trim() !== ''){
+        const a = document.createElement('a');
+        a.className = 'btn social';
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = icons[key] || key;
+        modalSocials.appendChild(a);
+      }
+    });
+
+    modalBackdrop.style.display = 'flex';
+    modalBackdrop.setAttribute('aria-hidden','false');
+  }
+
+  function closeModal(){
+    modalBackdrop.style.display = 'none';
+    modalBackdrop.setAttribute('aria-hidden','true');
+  }
+
+  closeModalBtn.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', (e)=>{
+    if (e.target === modalBackdrop) closeModal();
+  });
+
+  // Search & filter
+  const searchInp = document.getElementById('searchInp');
+  const clearBtn = document.getElementById('clearBtn');
+
+  function normalize(s){ return (s||'').toString().toLowerCase(); }
+  function doSearch(){
+    const q = normalize(searchInp.value);
+    const filtered = people.filter(p=>{
+      return normalize(p.name).includes(q) ||
+             normalize(p.role).includes(q) ||
+             normalize(p.desc).includes(q);
+    });
+    renderList(filtered);
+  }
+
+  searchInp.addEventListener('input', doSearch);
+  clearBtn.addEventListener('click', ()=>{
+    searchInp.value = '';
+    renderList(people);
+  });
+
+  // init
+  renderList(people);
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Accessibility: escape key to close modal
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'Escape' && modalBackdrop.style.display === 'flex') closeModal();
+  });
+</script>
+
+</body>
+</html>
